@@ -24,27 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="remove">
-            <!-- This entry makes ExampleLoggerInitializer discoverable. -->
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.AdServiceInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.AnalyticsInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.AuthServiceInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.DatabaseInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.FirebaseAppConfigInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.HttpClientInitializer"
-                android:value="androidx.startup" />
-            <meta-data  android:name="com.droidcon.accelappstartup.startup.initializer.LoggerInitializer"
-                android:value="androidx.startup" />
-        </provider>
     </application>
 
 </manifest>
