@@ -1,15 +1,16 @@
 package com.droidcon.accelappstartup
 
 import android.app.Application
-import com.droidcon.accelappstartup.startup.AdsManager
-import com.droidcon.accelappstartup.startup.AuthenticationRepository
-import com.droidcon.accelappstartup.startup.FakeAdsService
-import com.droidcon.accelappstartup.startup.FakeAnalyticsLibrary
-import com.droidcon.accelappstartup.startup.FakeAuthenticationService
-import com.droidcon.accelappstartup.startup.FakeDatabase
-import com.droidcon.accelappstartup.startup.FakeFirebaseAppConfigManager
-import com.droidcon.accelappstartup.startup.FakeHttpClient
-import com.droidcon.accelappstartup.startup.FakeLogger
+import androidx.startup.AppInitializer
+import com.droidcon.accelappstartup.startup.dependency.AdsManager
+import com.droidcon.accelappstartup.startup.dependency.AuthenticationRepository
+import com.droidcon.accelappstartup.startup.dependency.FakeAdsService
+import com.droidcon.accelappstartup.startup.dependency.FakeAnalyticsLibrary
+import com.droidcon.accelappstartup.startup.dependency.FakeAuthenticationService
+import com.droidcon.accelappstartup.startup.dependency.FakeDatabase
+import com.droidcon.accelappstartup.startup.dependency.FakeFirebaseAppConfigManager
+import com.droidcon.accelappstartup.startup.dependency.FakeHttpClient
+import com.droidcon.accelappstartup.startup.dependency.FakeLogger
 import com.droidcon.accelappstartup.startup.ParallelInitializer
 import com.droidcon.accelappstartup.startup.initializer.AdServiceInitializer
 import com.droidcon.accelappstartup.startup.initializer.AnalyticsInitializer
@@ -35,11 +36,13 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        slowStartup()
-//        fastStartup()
+//        slowStartup()
+//        slowStartupWithAppStartupLib()
+        fastStartup()
     }
 
     private fun fastStartup() {
+        // With App Startup Lib + Parallelization
         startupDuration = PerfTracer.measureMs {
             val zeroDependencyInitializers =
                 listOf(ParallelInitializer(AdServiceInitializer()) { adService = it },
@@ -58,7 +61,26 @@ class CustomApplication : Application() {
         }
     }
 
+    private fun slowStartupWithAppStartupLib() {
+        // With App Startup Lib
+        val appInitializer = AppInitializer.getInstance(this)
+        startupDuration = PerfTracer.measureMs {
+            adService = appInitializer.initializeComponent(AdServiceInitializer::class.java)
+            authService = appInitializer.initializeComponent(AuthServiceInitializer::class.java)
+            analyticsLibrary = appInitializer.initializeComponent(AnalyticsInitializer::class.java)
+            database = appInitializer.initializeComponent(DatabaseInitializer::class.java)
+            httpClient = appInitializer.initializeComponent(HttpClientInitializer::class.java)
+            logger = appInitializer.initializeComponent(LoggerInitializer::class.java)
+            firebaseAppConfigManager =
+                appInitializer.initializeComponent(FirebaseAppConfigInitializer::class.java)
+
+            authenticationRepository = AuthenticationRepository(authService)
+            adsManager = AdsManager(adService)
+        }
+    }
+
     private fun slowStartup() {
+        // Without App Startup Lib
         startupDuration = PerfTracer.measureMs {
             adService = FakeAdsService()
             authService = FakeAuthenticationService()

@@ -2,7 +2,7 @@ package com.droidcon.accelappstartup.startup.initializer
 
 import android.content.Context
 import androidx.startup.Initializer
-import com.droidcon.accelappstartup.startup.FakeLogger
+import com.droidcon.accelappstartup.startup.dependency.FakeLogger
 
 class LoggerInitializer: Initializer<FakeLogger> {
     override fun create(context: Context): FakeLogger {
