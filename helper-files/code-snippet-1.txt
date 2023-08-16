@@ -1,0 +1,9 @@
+
+
+            analyticsLibrary = appInitializer.initializeComponent(AnalyticsInitializer::class.java)
+            database = appInitializer.initializeComponent(DatabaseInitializer::class.java)
+            httpClient = appInitializer.initializeComponent(HttpClientInitializer::class.java)
+            logger = appInitializer.initializeComponent(LoggerInitializer::class.java)
+            firebaseAppConfigManager = appInitializer.initializeComponent(FirebaseAppConfigInitializer::class.java) 
+            authenticationRepository = AuthenticationRepository(authService) 
+            adsManager = AdsManager(adService) 
